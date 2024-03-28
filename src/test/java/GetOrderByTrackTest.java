@@ -12,7 +12,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 
 import static io.restassured.RestAssured.given;
-import static java.lang.String.valueOf;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
