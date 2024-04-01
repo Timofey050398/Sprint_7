@@ -2,6 +2,7 @@ import bodyclasses.Constants;
 import bodyclasses.request.CourierCreate;
 import bodyclasses.request.CourierDelete;
 import bodyclasses.request.CourierLogin;
+import com.github.javafaker.Faker;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.junit.After;
@@ -9,15 +10,15 @@ import org.junit.Before;
 import org.junit.Test;
 import io.qameta.allure.junit4.DisplayName;
 import io.qameta.allure.Description; // импорт Description
-import java.util.Random;
-import static io.restassured.RestAssured.given;
-import static java.lang.String.valueOf;;
+import java.util.HashMap;
+
 
 public class CourierLoginTest {
-    Random random = new Random();
-    String login = valueOf(random.nextInt(1000000));
-    String password = valueOf(random.nextInt(10000));
-    String firstName = "Andrey";
+    Faker faker = new Faker();
+    String login = faker.name().username();
+    String password = faker.internet().password();
+    String firstName = faker.name().firstName();
+    HashMap<String, Object> requestBody = new HashMap<>();
 
     @Before
     public void setUp() {
@@ -48,16 +49,16 @@ public class CourierLoginTest {
     @DisplayName("Код ответа 400, если в запросе не передан параметр login")
     @Description("Basic test for /api/v1/courier/login endpoint")
     public void cantLoginWithoutLoginParam() {
-        String courier = "{\"password\": \""+password+"\"}";
-        Response response = CourierLogin.sendPostCourierLogin(courier);
+        requestBody.put("password",password);
+        Response response = CourierLogin.sendPostCourierLogin(requestBody);
         CourierLogin.compareCode400Response(response);
     }
     @Test
     @DisplayName("Код ответа 400, если в запросе не передан параметр password")
     @Description("Basic test for /api/v1/courier/login endpoint")
     public void cantLoginWithoutPasswordParam() {
-        String courier = "{\"login\": \""+login+"\"}";
-        Response response = CourierLogin.sendPostCourierLogin(courier);
+        requestBody.put("login",login);
+        Response response = CourierLogin.sendPostCourierLogin(requestBody);
         CourierLogin.compareCode400Response(response);
     }
     @Test

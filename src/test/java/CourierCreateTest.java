@@ -2,22 +2,23 @@ import bodyclasses.Constants;
 import bodyclasses.request.CourierCreate;
 import bodyclasses.request.CourierDelete;
 import bodyclasses.request.CourierLogin;
+import com.github.javafaker.*;
+import io.qameta.allure.Description;
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import io.qameta.allure.junit4.DisplayName;
-import io.qameta.allure.Description; // импорт Description
-import java.util.Random;
+import java.util.HashMap;
 
-import static java.lang.String.valueOf;
 
 public class CourierCreateTest {
-    Random random = new Random();
-    String login = valueOf(random.nextInt(1000000));
-    String password = valueOf(random.nextInt(10000));
-    String firstName = "Andrey";
+    Faker faker = new Faker();
+    String login = faker.name().username();
+    String password = faker.internet().password();
+    String firstName = faker.name().firstName();
+    HashMap<String, Object> requestBody = new HashMap<>();
     @Before
     public void setUp() {
         RestAssured.baseURI = Constants.BASE_URL;
@@ -44,8 +45,8 @@ public class CourierCreateTest {
     @DisplayName("Eсли создать пользователя с логином, который уже есть, возвращается ошибка")
     @Description("Basic test for /api/v1/courier endpoint")
     public void cantCreateTwoCouriersWithEqualLogins() {
-        String secondFirstName = "Sergey";
-        String secondPassword = String.valueOf(random.nextInt(10000));
+        String secondFirstName = faker.name().firstName();
+        String secondPassword = faker.internet().password();
         CourierCreate firstCourier = new CourierCreate(login,password,firstName);
         CourierCreate secondCourier = new CourierCreate(login,secondPassword,secondFirstName);
         CourierCreate.sendPostCourierCreate(firstCourier);
@@ -66,24 +67,27 @@ public class CourierCreateTest {
     @DisplayName("Код ответа 400, если в запросе не передан параметр login")
     @Description("Basic test for /api/v1/courier endpoint")
     public void cantCreateCourierWithoutLogin() {
-        String courier = "{\"password\": \""+password+"\", \"firstName\": \""+firstName+"\"}";
-        Response response = CourierCreate.sendPostCourierCreate(courier);
+        requestBody.put("password",password);
+        requestBody.put("firstName",firstName);
+        Response response = CourierCreate.sendPostCourierCreate(requestBody);
         CourierCreate.compareCode400Response(response);
     }
     @Test
     @DisplayName("Код ответа 400, если в запросе не передан параметр password")
     @Description("Basic test for /api/v1/courier endpoint")
     public void cantCreateCourierWithoutPassword() {
-        String courier = "{\"login\": \""+login+"\", \"firstName\": \""+firstName+"\"}";
-        Response response = CourierCreate.sendPostCourierCreate(courier);
+        requestBody.put("login",login);
+        requestBody.put("firstName",firstName);
+        Response response = CourierCreate.sendPostCourierCreate(requestBody);
         CourierCreate.compareCode400Response(response);
     }
     @Test
     @DisplayName("Код ответа 400, если в запросе не передан параметр firstName")
     @Description("Basic test for /api/v1/courier endpoint")
     public void cantCreateCourierWithoutFirstName() {
-        String courier = "{\"login\": \""+login+"\", \"password\": \""+password+"\"}";
-        Response response = CourierCreate.sendPostCourierCreate(courier);
+        requestBody.put("login",login);
+        requestBody.put("password",password);
+        Response response = CourierCreate.sendPostCourierCreate(requestBody);
         CourierCreate.compareCode400Response(response);
     }
     @Test

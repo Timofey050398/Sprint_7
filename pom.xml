@@ -23,7 +23,12 @@
             <artifactId>logback-classic</artifactId>
             <version>1.2.3</version> <!-- Версия может быть другой -->
         </dependency>
-
+        <!-- https://mvnrepository.com/artifact/com.github.javafaker/javafaker -->
+        <dependency>
+            <groupId>com.github.javafaker</groupId>
+            <artifactId>javafaker</artifactId>
+            <version>1.0.2</version>
+        </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -34,7 +39,7 @@
             <artifactId>junit</artifactId>
             <version>4.13.2</version>
             <!--Тег scope указывает на область видимости зависимости: она видна только тестовым классам в директории src/test/java-->
-            <scope>test</scope>
+            <scope>test, compile</scope>
         </dependency>
         <dependency>
             <groupId>io.qameta.allure</groupId>
@@ -63,12 +68,6 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.10.1</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.2</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
     <build>

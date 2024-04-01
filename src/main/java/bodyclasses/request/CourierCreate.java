@@ -4,6 +4,9 @@ import bodyclasses.Constants;
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 
@@ -59,12 +62,12 @@ public class CourierCreate{
                 .post(Constants.CREATE_COURIER);
         return response;
     }
-    @Step("Send correct POST /api/v1/courier request")
-    public static Response sendPostCourierCreate(String courier){
+    @Step("Send incorrect POST /api/v1/courier request")
+    public static Response sendPostCourierCreate(HashMap<String, Object> requestBody){
         Response response =given()
                 .header("Content-type", "application/json")
                 .and()
-                .body(courier)
+                .body(requestBody)
                 .when()
                 .post(Constants.CREATE_COURIER);
         return response;

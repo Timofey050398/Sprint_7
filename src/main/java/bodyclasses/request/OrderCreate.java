@@ -1,9 +1,7 @@
 package bodyclasses.request;
 import bodyclasses.Constants;
 import io.qameta.allure.Step;
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
-
 import java.util.ArrayList;
 import java.util.List;
 import static io.restassured.RestAssured.given;

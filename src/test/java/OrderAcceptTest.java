@@ -1,28 +1,34 @@
 import bodyclasses.Constants;
 import bodyclasses.request.*;
 import bodyclasses.response.getorderbytrack.GetOrderByTrack;
+import com.github.javafaker.Faker;
 import io.qameta.allure.Description;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
 import static java.lang.String.valueOf;
 
 public class OrderAcceptTest {
-    Random random = new Random();
-    String login = valueOf(random.nextInt(1000000));
-    String password = valueOf(random.nextInt(10000));
-    String firstName = "Andrey";
-    String lastName = "12345";
-    String address = "Konoha, 142 apt.";
-    int  metroStation = 4;
-    String phone = "+7 800 355 35 35";
-    int rentTime = 5;
-    String deliveryDate = "2020-06-06";
-    String comment="Saske, come back to Konoha";
+    Faker faker = new Faker();
+    String login = faker.name().username();
+    String password = faker.internet().password();
+    String firstName = faker.name().firstName();
+    String lastName = faker.name().lastName();
+    String address = faker.address().fullAddress();
+    int  metroStation = faker.number().numberBetween(1,30);
+    String phone = faker.phoneNumber().phoneNumber();
+    int rentTime = faker.number().numberBetween(1,7);
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+    String deliveryDate = formatter.format(faker.date().future(90, TimeUnit.DAYS));
+    String comment= faker.lorem().sentence();
     ArrayList<String> color = new ArrayList<>();
     OrderCreate order = new OrderCreate(firstName,lastName,address,metroStation,phone,rentTime,deliveryDate,comment,color);
     @Before
@@ -47,7 +53,7 @@ public class OrderAcceptTest {
         }
     }
     @Test
-    public void  SuccessResponseOkTrue(){
+    public void  successResponseOkTrue(){
         int id = CourierLogin.getId(login,password);
         int track = OrderCreate.getTrack(order);
         String orderId = GetOrderByTrack.getOrderId(track);
@@ -55,14 +61,14 @@ public class OrderAcceptTest {
         OrderAccept.compareResponseWithSuccess(response);
     }
     @Test
-    public void ErrorWhenCourierIdIsEmpty(){
+    public void errorWhenCourierIdIsEmpty(){
         int track = OrderCreate.getTrack(order);
         String orderId = GetOrderByTrack.getOrderId(track);
         Response response = OrderAccept.sendOrderAccept(orderId);
         OrderAccept.compareCode400Response(response);
     }
     @Test
-    public void ErrorWhenCourierIdIsWrong(){
+    public void errorWhenCourierIdIsWrong(){
         int id = CourierLogin.getId(login,password)*10;
         int track = OrderCreate.getTrack(order);
         String orderId = GetOrderByTrack.getOrderId(track);
@@ -70,14 +76,13 @@ public class OrderAcceptTest {
         OrderAccept.compareResponseWithWrongCourier(response);
     }
     @Test
-    public void ErrorWhenOrderIdIsEmpty(){
+    public void errorWhenOrderIdIsEmpty(){
         int id = CourierLogin.getId(login,password);
         Response response = OrderAccept.sendOrderAccept(id);
         OrderAccept.compareCode400Response(response);
-        System.out.println(response.getBody().asString());
     }
     @Test
-    public void ErrorWhenOrderIdIsWrong(){
+    public void errorWhenOrderIdIsWrong(){
         int id = CourierLogin.getId(login,password);
         int track = OrderCreate.getTrack(order);
         String orderId = GetOrderByTrack.getOrderId(track)+"000";
