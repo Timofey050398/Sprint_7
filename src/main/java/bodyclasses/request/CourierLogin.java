@@ -75,6 +75,7 @@ public class CourierLogin {
                 .path("id");
         return id;
     }
+
     @Step("Checks if the response is correct on a successful request")
     public static void compareSuccessResponse(Response response){
         response.then()

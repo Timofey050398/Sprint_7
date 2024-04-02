@@ -24,7 +24,7 @@ public class CourierCreateTest {
         RestAssured.baseURI = Constants.BASE_URL;
     }
     @After
-    @Description("Delete Courier")
+    @DisplayName("Delete Courier")
     public void deleteCourier(){
         Integer _id = CourierLogin.getId(login,password);
         if(_id != null){
@@ -37,7 +37,7 @@ public class CourierCreateTest {
     @DisplayName("Успешное создание курьера")
     @Description("Basic test for /api/v1/courier/login endpoint")
     public void correctCreateResponceMessage() {
-        CourierCreate courier = new CourierCreate(login,password,firstName);
+        CourierCreate courier = new CourierCreate();
         Response response = CourierCreate.sendPostCourierCreate(courier);
         CourierCreate.compareWithCorrectCreatingResponse(response);
     }
@@ -45,11 +45,11 @@ public class CourierCreateTest {
     @DisplayName("Eсли создать пользователя с логином, который уже есть, возвращается ошибка")
     @Description("Basic test for /api/v1/courier endpoint")
     public void cantCreateTwoCouriersWithEqualLogins() {
+        CourierCreate courier = new CourierCreate();
         String secondFirstName = faker.name().firstName();
         String secondPassword = faker.internet().password();
-        CourierCreate firstCourier = new CourierCreate(login,password,firstName);
-        CourierCreate secondCourier = new CourierCreate(login,secondPassword,secondFirstName);
-        CourierCreate.sendPostCourierCreate(firstCourier);
+        CourierCreate secondCourier = new CourierCreate(courier.getLogin(),secondPassword,secondFirstName);
+        CourierCreate.sendPostCourierCreate(courier);
         Response response = CourierCreate.sendPostCourierCreate(secondCourier);
         CourierCreate.compareResponseWithLoginAlreadyUsed(response);
     }
@@ -57,8 +57,8 @@ public class CourierCreateTest {
     @DisplayName("Нельзя создать 2 курьера c одинаковым login, password и firstName")
     @Description("Basic test for /api/v1/courier endpoint")
     public void cantCreateTwoEqualsCouriers() {
-        CourierCreate firstCourier = new CourierCreate(login,password,firstName);
-        CourierCreate secondCourier = new CourierCreate(login,password,firstName);
+        CourierCreate firstCourier = new CourierCreate();
+        CourierCreate secondCourier = firstCourier;
         CourierCreate.sendPostCourierCreate(firstCourier);
         Response response = CourierCreate.sendPostCourierCreate(secondCourier);
         CourierCreate.compareResponseWithLoginAlreadyUsed(response);

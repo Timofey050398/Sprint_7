@@ -1,9 +1,14 @@
 package bodyclasses.request;
 import bodyclasses.Constants;
+import com.github.javafaker.Faker;
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.isA;
 
@@ -89,7 +94,32 @@ public class OrderCreate {
     public void setColor(List<String> color) {
         this.color = color;
     }
-    public OrderCreate(){};
+    public OrderCreate(){
+        Faker faker = new Faker();
+        this.firstName = faker.name().firstName();
+        this.lastName = faker.name().lastName();
+        this.address = faker.address().fullAddress();
+        this.metroStation = faker.number().numberBetween(1,30);
+        this.phone = faker.phoneNumber().phoneNumber();
+        this.rentTime = faker.number().numberBetween(1,7);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        this.deliveryDate = formatter.format(faker.date().future(90, TimeUnit.DAYS));
+        this.comment= faker.lorem().sentence();
+        this.color = new ArrayList<>();
+    }
+    public OrderCreate(ArrayList<String> color){
+        Faker faker = new Faker();
+        this.firstName = faker.name().firstName();
+        this.lastName = faker.name().lastName();
+        this.address = faker.address().fullAddress();
+        this.metroStation = faker.number().numberBetween(1,30);
+        this.phone = faker.phoneNumber().phoneNumber();
+        this.rentTime = faker.number().numberBetween(1,7);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        this.deliveryDate = formatter.format(faker.date().future(90, TimeUnit.DAYS));
+        this.comment= faker.lorem().sentence();
+        this.color =color;
+    }
     public OrderCreate(String firstName, String lastName, String address, int metroStation, String phone, int rentTime, String deliveryDate, String comment, ArrayList<String> color){
         this.firstName = firstName;
         this.lastName = lastName;

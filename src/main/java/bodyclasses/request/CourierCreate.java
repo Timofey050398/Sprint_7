@@ -1,6 +1,7 @@
 package bodyclasses.request;
 
 import bodyclasses.Constants;
+import com.github.javafaker.Faker;
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
 
@@ -11,11 +12,11 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 
 public class CourierCreate{
-    private String login;
-    private String password;
+    private  String login;
+    private  String password;
     private String firstName;
 
-    public String getLogin() {
+    public  String getLogin() {
         return login;
     }
 
@@ -23,7 +24,7 @@ public class CourierCreate{
         this.login = login;
     }
 
-    public String getPassword() {
+    public  String getPassword() {
         return password;
     }
 
@@ -39,7 +40,10 @@ public class CourierCreate{
     }
 
     public CourierCreate() {
-        // Пустой конструктор
+        Faker faker = new Faker();
+        this.login = faker.name().username();
+        this.password = faker.internet().password();
+        this.firstName = faker.name().firstName();
     }
 
     public CourierCreate(String login, String password, String firstName) {

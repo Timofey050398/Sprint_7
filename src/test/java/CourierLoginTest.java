@@ -28,7 +28,7 @@ public class CourierLoginTest {
     }
 
     @After
-    @Description("Delete Courier")
+    @DisplayName("Delete Courier")
     public void deleteCourier() {
         Integer _id = CourierLogin.getId(login, password);
         if (_id != null) {
